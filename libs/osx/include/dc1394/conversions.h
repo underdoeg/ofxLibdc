@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <dc1394_log.h>
+#include <dc1394/log.h>
 
 #ifndef __DC1394_CONVERSIONS_H__
 #define __DC1394_CONVERSIONS_H__
@@ -62,7 +62,7 @@ typedef enum {
     DC1394_STEREO_METHOD_INTERLACED=0,
     DC1394_STEREO_METHOD_FIELD
 } dc1394stereo_method_t;
-#define DC1394_STEREO_METHOD_MIN     DC1394_STEREO_METHOD_INTERLACE
+#define DC1394_STEREO_METHOD_MIN     DC1394_STEREO_METHOD_INTERLACED
 #define DC1394_STEREO_METHOD_MAX     DC1394_STEREO_METHOD_FIELD
 #define DC1394_STEREO_METHOD_NUM    (DC1394_STEREO_METHOD_MAX-DC1394_STEREO_METHOD_MIN+1)
 
@@ -141,10 +141,10 @@ dc1394_deinterlace_stereo(uint8_t *src, uint8_t *dest, uint32_t width, uint32_t 
  *  - Bilinear         : OpenCV library                                                         *
  *  - HQLinear         : High-Quality Linear Interpolation For Demosaicing Of Bayer-Patterned   *
  *                       Color Images, by Henrique S. Malvar, Li-wei He, and Ross Cutler,       *
- *                          in Proceedings of the ICASSP'04 Conference.                            *
+ *                       in Proceedings of the ICASSP'04 Conference.                            *
  *  - Edge Sense II    : Laroche, Claude A. "Apparatus and method for adaptively interpolating  *
  *                       a full color image utilizing chrominance gradients"                    *
- *                          U.S. Patent 5,373,322. Based on the code found on the website          *
+ *                       U.S. Patent 5,373,322. Based on the code found on the website          *
  *                       http://www-ise.stanford.edu/~tingchen/ Converted to C and adapted to   *
  *                       all four elementary patterns.                                          *
  *  - Downsample       : "Known to the Ancients"                                                *

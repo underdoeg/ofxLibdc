@@ -3,15 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 44;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		67152FEE1727792E00C8946B /* libdc1394.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67152FE41727792E00C8946B /* libdc1394.a */; };
+		01FEC8531C975082001AB45E /* libdc1394.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FEC8521C975082001AB45E /* libdc1394.a */; };
 		67152FF01727792E00C8946B /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67152FE71727792E00C8946B /* Camera.cpp */; };
 		67152FF11727792E00C8946B /* Grabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67152FE91727792E00C8946B /* Grabber.cpp */; };
 		67152FF21727792E00C8946B /* PointGrey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67152FEC1727792E00C8946B /* PointGrey.cpp */; };
-		67152FF517277A4800C8946B /* libusb-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67152FF417277A4800C8946B /* libusb-1.0.a */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -65,24 +64,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		67152FD01727792E00C8946B /* dc1394.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394.h; sourceTree = "<group>"; };
-		67152FD11727792E00C8946B /* dc1394_camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_camera.h; sourceTree = "<group>"; };
-		67152FD21727792E00C8946B /* dc1394_capture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_capture.h; sourceTree = "<group>"; };
-		67152FD31727792E00C8946B /* dc1394_control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_control.h; sourceTree = "<group>"; };
-		67152FD41727792E00C8946B /* dc1394_conversions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_conversions.h; sourceTree = "<group>"; };
-		67152FD51727792E00C8946B /* dc1394_format7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_format7.h; sourceTree = "<group>"; };
-		67152FD61727792E00C8946B /* dc1394_iso.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_iso.h; sourceTree = "<group>"; };
-		67152FD71727792E00C8946B /* dc1394_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_log.h; sourceTree = "<group>"; };
-		67152FD81727792E00C8946B /* dc1394_register.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_register.h; sourceTree = "<group>"; };
-		67152FD91727792E00C8946B /* dc1394_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_types.h; sourceTree = "<group>"; };
-		67152FDA1727792E00C8946B /* dc1394_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_utils.h; sourceTree = "<group>"; };
-		67152FDB1727792E00C8946B /* dc1394_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394_video.h; sourceTree = "<group>"; };
-		67152FDD1727792E00C8946B /* capture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = capture.h; sourceTree = "<group>"; };
-		67152FDF1727792E00C8946B /* avt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avt.h; sourceTree = "<group>"; };
-		67152FE01727792E00C8946B /* basler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basler.h; sourceTree = "<group>"; };
-		67152FE11727792E00C8946B /* basler_sff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basler_sff.h; sourceTree = "<group>"; };
-		67152FE21727792E00C8946B /* pixelink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pixelink.h; sourceTree = "<group>"; };
-		67152FE41727792E00C8946B /* libdc1394.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdc1394.a; sourceTree = "<group>"; };
+		01FEC8401C975068001AB45E /* camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
+		01FEC8411C975068001AB45E /* capture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = capture.h; sourceTree = "<group>"; };
+		01FEC8421C975068001AB45E /* control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = control.h; sourceTree = "<group>"; };
+		01FEC8431C975068001AB45E /* conversions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conversions.h; sourceTree = "<group>"; };
+		01FEC8441C975068001AB45E /* dc1394.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dc1394.h; sourceTree = "<group>"; };
+		01FEC8451C975068001AB45E /* format7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = format7.h; sourceTree = "<group>"; };
+		01FEC8461C975068001AB45E /* iso.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iso.h; sourceTree = "<group>"; };
+		01FEC8471C975068001AB45E /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		01FEC8481C975068001AB45E /* macosx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macosx.h; sourceTree = "<group>"; };
+		01FEC8491C975068001AB45E /* register.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = register.h; sourceTree = "<group>"; };
+		01FEC84A1C975068001AB45E /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		01FEC84B1C975068001AB45E /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		01FEC84D1C975068001AB45E /* avt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avt.h; sourceTree = "<group>"; };
+		01FEC84E1C975068001AB45E /* basler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basler.h; sourceTree = "<group>"; };
+		01FEC84F1C975068001AB45E /* basler_sff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basler_sff.h; sourceTree = "<group>"; };
+		01FEC8501C975068001AB45E /* pixelink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pixelink.h; sourceTree = "<group>"; };
+		01FEC8511C975068001AB45E /* video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = video.h; sourceTree = "<group>"; };
+		01FEC8521C975082001AB45E /* libdc1394.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdc1394.a; path = x64/libdc1394.a; sourceTree = "<group>"; };
 		67152FE71727792E00C8946B /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		67152FE81727792E00C8946B /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		67152FE91727792E00C8946B /* Grabber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Grabber.cpp; sourceTree = "<group>"; };
@@ -90,7 +89,6 @@
 		67152FEB1727792E00C8946B /* ofxLibdc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxLibdc.h; sourceTree = "<group>"; };
 		67152FEC1727792E00C8946B /* PointGrey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PointGrey.cpp; sourceTree = "<group>"; };
 		67152FED1727792E00C8946B /* PointGrey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointGrey.h; sourceTree = "<group>"; };
-		67152FF417277A4800C8946B /* libusb-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libusb-1.0.a"; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -131,6 +129,7 @@
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
 				E45BE97E0E8CC7DD009D7055 /* Carbon.framework in Frameworks */,
 				E45BE97F0E8CC7DD009D7055 /* CoreAudio.framework in Frameworks */,
+				01FEC8531C975082001AB45E /* libdc1394.a in Frameworks */,
 				E45BE9800E8CC7DD009D7055 /* CoreFoundation.framework in Frameworks */,
 				E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */,
 				E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */,
@@ -139,14 +138,23 @@
 				E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */,
 				E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */,
 				E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */,
-				67152FEE1727792E00C8946B /* libdc1394.a in Frameworks */,
-				67152FF517277A4800C8946B /* libusb-1.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01FEC84C1C975068001AB45E /* vendor */ = {
+			isa = PBXGroup;
+			children = (
+				01FEC84D1C975068001AB45E /* avt.h */,
+				01FEC84E1C975068001AB45E /* basler.h */,
+				01FEC84F1C975068001AB45E /* basler_sff.h */,
+				01FEC8501C975068001AB45E /* pixelink.h */,
+			);
+			path = vendor;
+			sourceTree = "<group>";
+		};
 		67152FCB1727791B00C8946B /* ofxLibdc */ = {
 			isa = PBXGroup;
 			children = (
@@ -185,48 +193,28 @@
 		67152FCF1727792E00C8946B /* dc1394 */ = {
 			isa = PBXGroup;
 			children = (
-				67152FD01727792E00C8946B /* dc1394.h */,
-				67152FD11727792E00C8946B /* dc1394_camera.h */,
-				67152FD21727792E00C8946B /* dc1394_capture.h */,
-				67152FD31727792E00C8946B /* dc1394_control.h */,
-				67152FD41727792E00C8946B /* dc1394_conversions.h */,
-				67152FD51727792E00C8946B /* dc1394_format7.h */,
-				67152FD61727792E00C8946B /* dc1394_iso.h */,
-				67152FD71727792E00C8946B /* dc1394_log.h */,
-				67152FD81727792E00C8946B /* dc1394_register.h */,
-				67152FD91727792E00C8946B /* dc1394_types.h */,
-				67152FDA1727792E00C8946B /* dc1394_utils.h */,
-				67152FDB1727792E00C8946B /* dc1394_video.h */,
-				67152FDC1727792E00C8946B /* macosx */,
-				67152FDE1727792E00C8946B /* vendor */,
+				01FEC8401C975068001AB45E /* camera.h */,
+				01FEC8411C975068001AB45E /* capture.h */,
+				01FEC8421C975068001AB45E /* control.h */,
+				01FEC8431C975068001AB45E /* conversions.h */,
+				01FEC8441C975068001AB45E /* dc1394.h */,
+				01FEC8451C975068001AB45E /* format7.h */,
+				01FEC8461C975068001AB45E /* iso.h */,
+				01FEC8471C975068001AB45E /* log.h */,
+				01FEC8481C975068001AB45E /* macosx.h */,
+				01FEC8491C975068001AB45E /* register.h */,
+				01FEC84A1C975068001AB45E /* types.h */,
+				01FEC84B1C975068001AB45E /* utils.h */,
+				01FEC84C1C975068001AB45E /* vendor */,
+				01FEC8511C975068001AB45E /* video.h */,
 			);
 			path = dc1394;
-			sourceTree = "<group>";
-		};
-		67152FDC1727792E00C8946B /* macosx */ = {
-			isa = PBXGroup;
-			children = (
-				67152FDD1727792E00C8946B /* capture.h */,
-			);
-			path = macosx;
-			sourceTree = "<group>";
-		};
-		67152FDE1727792E00C8946B /* vendor */ = {
-			isa = PBXGroup;
-			children = (
-				67152FDF1727792E00C8946B /* avt.h */,
-				67152FE01727792E00C8946B /* basler.h */,
-				67152FE11727792E00C8946B /* basler_sff.h */,
-				67152FE21727792E00C8946B /* pixelink.h */,
-			);
-			path = vendor;
 			sourceTree = "<group>";
 		};
 		67152FE31727792E00C8946B /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				67152FE41727792E00C8946B /* libdc1394.a */,
-				67152FF417277A4800C8946B /* libusb-1.0.a */,
+				01FEC8521C975082001AB45E /* libdc1394.a */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -360,6 +348,8 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ofxLibdcExample" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -440,7 +430,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -459,12 +449,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
+					../../../addons/ofxLibdc/libs/osx/include,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
 				);
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -472,7 +464,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -492,12 +484,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
+					../../../addons/ofxLibdc/libs/osx/include,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
 				);
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -516,6 +510,11 @@
 				GCC_MODEL_TUNING = NONE;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					src,
+					../../../addons/ofxLibdc/libs/osx/include,
+				);
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -582,6 +581,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/Users/brettrenfer/Dropbox/Code/OF/of_v0.X.X_github/addons/ofxLibdc/libs/osx/lib/x64,
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../libs/osx/lib\"";
 				PREBINDING = NO;
@@ -605,6 +605,11 @@
 				GCC_MODEL_TUNING = NONE;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					src,
+					../../../addons/ofxLibdc/libs/osx/include,
+				);
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -671,6 +676,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/Users/brettrenfer/Dropbox/Code/OF/of_v0.X.X_github/addons/ofxLibdc/libs/osx/lib/x64,
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../libs/osx/lib\"";
 				PREBINDING = NO;

@@ -19,8 +19,8 @@
  */
 
 
-#include <dc1394_log.h>
-#include <dc1394_video.h>
+#include <dc1394/log.h>
+#include <dc1394/video.h>
 
 #ifndef __DC1394_CAPTURE_H__
 #define __DC1394_CAPTURE_H__
@@ -47,6 +47,13 @@ typedef enum {
 #define DC1394_CAPTURE_POLICY_NUM   (DC1394_CAPTURE_POLICY_MAX - DC1394_CAPTURE_POLICY_MIN + 1)
 
 /**
+* typedef for the callback param for dc1394_capture_set_callback
+*/
+
+typedef void (*dc1394capture_callback_t)(dc1394camera_t *, void *);
+
+
+/**
  * Capture flags. Currently limited to switching automatic functions on/off: channel allocation, bandwidth allocation and automatic
  * starting of ISO transmission
  */
@@ -54,31 +61,6 @@ typedef enum {
 #define DC1394_CAPTURE_FLAGS_BANDWIDTH_ALLOC 0x00000002U
 #define DC1394_CAPTURE_FLAGS_DEFAULT         0x00000004U /* a reasonable default value: do bandwidth and channel allocation */
 #define DC1394_CAPTURE_FLAGS_AUTO_ISO        0x00000008U /* automatically start iso before capture and stop it after */
-
-
-
-
-#ifndef __DC1394_CAPTURE_MACOSX_H__
-#define __DC1394_CAPTURE_MACOSX_H__
-
-typedef void (*dc1394capture_callback_t)(dc1394camera_t *, void *);
-
-int
-dc1394_capture_schedule_with_runloop (dc1394camera_t * camera,
-									  CFRunLoopRef run_loop, CFStringRef run_loop_mode);
-void
-dc1394_capture_set_callback (dc1394camera_t * camera,
-							 dc1394capture_callback_t callback, void * user_data);
-
-#endif
-
-
-
-
-
-
-
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -124,6 +106,12 @@ dc1394error_t dc1394_capture_enqueue(dc1394camera_t * camera, dc1394video_frame_
  */
 dc1394bool_t dc1394_capture_is_frame_corrupt (dc1394camera_t * camera,
         dc1394video_frame_t * frame);
+
+/**
+ * Set a callback if supported by the platform (OS X only for now).
+ */
+void dc1394_capture_set_callback (dc1394camera_t * camera,
+        dc1394capture_callback_t callback, void * user_data);
 
 #ifdef __cplusplus
 }

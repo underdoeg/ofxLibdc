@@ -31,7 +31,7 @@
     More details soon
 */
 
-#include <dc1394_log.h>
+#include <dc1394/log.h>
 
 #ifdef __cplusplus
 extern "C" {

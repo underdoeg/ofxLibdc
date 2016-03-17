@@ -42,16 +42,16 @@
 */
 
 /* Include all public header files:*/
-#include <dc1394_types.h>
-#include <dc1394_camera.h>
-#include <dc1394_control.h>
-#include <dc1394_capture.h>
-#include <dc1394_conversions.h>
-#include <dc1394_format7.h>
-#include <dc1394_iso.h>
-#include <dc1394_log.h>
-#include <dc1394_register.h>
-#include <dc1394_video.h>
-#include <dc1394_utils.h>
+#include <dc1394/types.h>
+#include <dc1394/camera.h>
+#include <dc1394/control.h>
+#include <dc1394/capture.h>
+#include <dc1394/conversions.h>
+#include <dc1394/format7.h>
+#include <dc1394/iso.h>
+#include <dc1394/log.h>
+#include <dc1394/register.h>
+#include <dc1394/video.h>
+#include <dc1394/utils.h>
 
 #endif

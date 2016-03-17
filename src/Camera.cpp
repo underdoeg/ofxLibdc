@@ -263,6 +263,8 @@ namespace ofxLibdc {
                             }
                             found = true;
                         }
+                    } else {
+                        
                     }
                 }
                 

@@ -42,7 +42,7 @@
  *          and for generating meaningful problem reports.
  ***************************************************************************/
 
-#include <dc1394.h>
+#include <dc1394/dc1394.h>
 
 #ifndef __DC1394_LOG_H__
 #define __DC1394_LOG_H__

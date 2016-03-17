@@ -2,7 +2,10 @@
 
 void testApp::setup() {
 	ofSetVerticalSync(true);
-
+    ofSetLogLevel(OF_LOG_VERBOSE);
+    camera.setFormat7(true);
+    camera.setSize(1920, 1200);
+    
 	// If you want to set any non-default parameters like size, format7, blocking
 	// capture, etc., you can do it here before setup. They'll be applied to the
 	// camera during setup().

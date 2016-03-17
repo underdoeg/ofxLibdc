@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <dc1394_log.h>
+#include <dc1394/log.h>
 
 #ifndef __DC1394_CONTROL_H__
 #define __DC1394_CONTROL_H__
