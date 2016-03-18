@@ -125,9 +125,16 @@ namespace ofxLibdc {
 		capturePolicy = blocking ? DC1394_CAPTURE_POLICY_WAIT : DC1394_CAPTURE_POLICY_POLL;
 	}
 	
-	void Camera::setBayerMode(dc1394color_filter_t bayerMode){
+	void Camera::setBayerMode(dc1394color_filter_t bayerMode, dc1394bayer_method_t method){
 		setImageType(OF_IMAGE_COLOR);
-		this->bayerMode = bayerMode;
+		this->bayerMode     = bayerMode;
+        
+        if ( isStereo ){
+            ofLogError()<<"[ofxLibdc] Don't override the default stereo bayer method!";
+        } else {
+            this->bayerMethod   = method;
+        }
+        
 		useBayer = true;
 	}
 	
@@ -145,19 +152,20 @@ namespace ofxLibdc {
 			ofLog(OF_LOG_ERROR, "No cameras found.");
 			return false;
 		}
-		uint64_t cameraGuid = list->ids[cameraNumber].guid;
+		cameraGuidInt = list->ids[cameraNumber].guid;
 		dc1394_camera_free_list(list);
-		return initCamera(cameraGuid) && applySettings();
+		return initCamera(cameraGuidInt) && applySettings();
 	}
 	
 	bool Camera::setup(string cameraGuid) {
-		uint64_t cameraGuidInt;
+        cameraGuidInt = 0;
 		istringstream ss(cameraGuid);
 		ss >> hex >> cameraGuidInt;
 		return initCamera(cameraGuidInt) && applySettings();
 	}
 	
 	bool Camera::initCamera(uint64_t cameraGuid) {
+        cameraGuidInt = cameraGuid;
 		// create camera struct
 		camera = dc1394_camera_new(libdcContext, cameraGuid);
 		if (!camera) {
@@ -233,10 +241,15 @@ namespace ofxLibdc {
                     packetSize = (width * height * depth + denominator - 1) / denominator;
                     ofLogWarning() << "The camera may not run at exactly " << frameRate << " fps";
                 }
+                dc1394_format7_set_packet_size(camera, videoMode, packetSize);
                 dc1394_format7_set_roi(camera, videoMode, getLibdcType(imageType), packetSize, left, top, width, height);
                 unsigned int curWidth, curHeight;
                 dc1394_format7_get_image_size(camera, videoMode, &curWidth, &curHeight);
                 ofLogVerbose() <<  "Using mode: " <<  width << "x" << height;
+                
+                dc1394color_coding_t colorCode;
+                dc1394_format7_get_color_coding(camera, videoMode, &colorCode);
+                ofLogVerbose()<< "Using color coding: "<<colorCode;
             } else {
                 dc1394video_modes_t video_modes;
                 dc1394_video_get_supported_modes(camera, &video_modes);
@@ -281,29 +294,28 @@ namespace ofxLibdc {
                 }
                 
                 dc1394framerates_t frameRates;
-                dc1394framerate_t selectedFrameRate;
                 dc1394_video_get_supported_framerates(camera, videoMode, &frameRates);
                 for(int i = 0; i < frameRates.num; i++) {
                     ofLogVerbose() << "Available framerate: " << makeString(frameRates.framerates[i]);
                 }
                 if(frameRate == 0) {
-                    selectedFrameRate = frameRates.framerates[frameRates.num - 1];
+                    framerateActual = frameRates.framerates[frameRates.num - 1];
                 } else {
                     float bestDistance;
                     for(int i = 0; i < frameRates.num; i++) {
                         float curDistance = abs(frameRate - makeFloat(frameRates.framerates[i]));
                         if(i == 0 || curDistance < bestDistance) {
                             bestDistance = curDistance;
-                            selectedFrameRate = frameRates.framerates[i];
+                            framerateActual = frameRates.framerates[i];
                         }
                     }
                     if(bestDistance != 0) {
-                        ofLogWarning() << "Using framerate " << makeFloat(selectedFrameRate) << " instead of " << frameRate;
-                        frameRate = makeFloat(selectedFrameRate);
+                        ofLogWarning() << "Using framerate " << makeFloat(framerateActual) << " instead of " << frameRate;
+                        frameRate = makeFloat(framerateActual);
                     }
                 }
-                dc1394_video_set_framerate(camera, selectedFrameRate);
-                ofLogVerbose() <<  "Using mode: " <<  width << "x" << height << makeString(selectedFrameRate) << "fps";
+                dc1394_video_set_framerate(camera, framerateActual);
+                ofLogVerbose() <<  "Using mode: " <<  width << "x" << height << makeString(framerateActual) << "fps";
             }
         }
 				
@@ -340,6 +352,13 @@ namespace ofxLibdc {
 			dc1394_feature_print_all(&features, stdout);
 		}
 	}
+    
+    
+    string Camera::getGuid() {
+        stringstream ss;
+        ss << hex << cameraGuidInt;
+        return ss.str();
+    }
 	
 	// normalized values
 	void Camera::setBrightness(float brightness) {setFeature(DC1394_FEATURE_BRIGHTNESS, brightness);}
@@ -471,6 +490,11 @@ namespace ofxLibdc {
 	float Camera::getFrameRate() const {
 		return frameRate;
 	}
+    
+    
+    dc1394framerate_t Camera::getFrameRateActual() const {
+        return framerateActual;
+    }
 	
 	ofImageType Camera::getImageType() const {
 		return imageType;
@@ -573,7 +597,7 @@ namespace ofxLibdc {
 					memcpy(dst, src, width * height);
 				} else if(imageType == OF_IMAGE_COLOR) {
 					if(useBayer) {
-						dc1394_bayer_decoding_8bit(src, dst, width, height, bayerMode, DC1394_BAYER_METHOD_BILINEAR);
+						dc1394_bayer_decoding_8bit(src, dst, width, height, bayerMode, bayerMethod);
 					} else {
 						unsigned int bits = width * height * img.getPixels().getBitsPerPixel();
 						dc1394_convert_to_RGB8(src, dst, width, height, 0, getLibdcType(imageType), bits);
@@ -583,7 +607,7 @@ namespace ofxLibdc {
 				ready = true;
 				return true;
             } else {
-                ofLogWarning()<<"[ofxLibdc] Frame is null. Libdc error code:"<<err;
+                ofLogVerbose()<<"[ofxLibdc] Frame is null. Libdc error code:"<<err;
 				return false;
 			}
         } else {
