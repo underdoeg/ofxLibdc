@@ -583,11 +583,10 @@ namespace ofxLibdc {
 				ready = true;
 				return true;
             } else {
-                cout << "frame is null "<<err<<endl;
+                ofLogWarning()<<"[ofxLibdc] Frame is null. Libdc error code:"<<err;
 				return false;
 			}
         } else {
-            cout << "camera is null"<<endl;
 			return false;
 		}
 	}
