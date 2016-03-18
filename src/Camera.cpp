@@ -561,7 +561,7 @@ namespace ofxLibdc {
 	bool Camera::grabFrame(ofImage& img) {
 		if(camera) {
 			dc1394video_frame_t *frame;
-			dc1394_capture_dequeue(camera, capturePolicy, &frame);
+			dc1394error_t err = dc1394_capture_dequeue(camera, capturePolicy, &frame);
 			if(frame != NULL) {
 				// don't trust allocate() to be smart. should also check for imageType change.
 				if(img.getWidth() != width || img.getHeight() != height) {
@@ -582,10 +582,12 @@ namespace ofxLibdc {
 				dc1394_capture_enqueue(camera, frame);
 				ready = true;
 				return true;
-			} else {
+            } else {
+                cout << "frame is null "<<err<<endl;
 				return false;
 			}
-		} else {
+        } else {
+            cout << "camera is null"<<endl;
 			return false;
 		}
 	}

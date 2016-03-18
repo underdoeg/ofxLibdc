@@ -1,10 +1,8 @@
-#include "testApp.h"
+#include "ofApp.h"
 
-void testApp::setup() {
+void ofApp::setup() {
 	ofSetVerticalSync(true);
     ofSetLogLevel(OF_LOG_VERBOSE);
-    camera.setFormat7(true);
-    camera.setSize(1920, 1200);
     
 	// If you want to set any non-default parameters like size, format7, blocking
 	// capture, etc., you can do it here before setup. They'll be applied to the
@@ -21,18 +19,22 @@ void testApp::setup() {
 	ofSetWindowShape(camera.getWidth(), camera.getHeight());
 }
 
-void testApp::update() {
+void ofApp::update() {
 	// grabVideo() will place the most recent frame into curFrame. If it's a new
 	// frame, grabFrame returns true. If there are multiple frames available, it
 	// will drop old frames and only give you the newest. This guarantees the
 	// lowest latency. If you prefer to not drop frames, set the second argument
 	// (dropFrames) to false. By default, capture is non-blocking.
-	if(camera.grabVideo(curFrame)) {
+    auto v = camera.grabVideo(curFrame);
+    
+    if(v) {
 		curFrame.update();
-	}
+    } else {
+        
+    }
 }
 
-void testApp::draw() {
+void ofApp::draw() {
 	// If the camera isn't ready, the curFrame will be empty.
 	if(camera.isReady()) {
 		// Camera doesn't draw itself, curFrame does.
