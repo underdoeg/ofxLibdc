@@ -245,9 +245,14 @@ namespace ofxLibdc {
                 dc1394_format7_set_roi(camera, videoMode, getLibdcType(imageType), packetSize, left, top, width, height);
                 unsigned int curWidth, curHeight;
                 dc1394_format7_get_image_size(camera, videoMode, &curWidth, &curHeight);
-                ofLogVerbose() <<  "Using mode: " <<  width << "x" << height;
+                ofLogVerbose() <<  "Using mode: " <<  curWidth << "x" << curHeight;
                 
                 dc1394color_coding_t colorCode;
+                
+                if ( useBayer ){
+                    dc1394_format7_set_color_coding(camera, videoMode, DC1394_COLOR_CODING_RAW8);
+                }
+                
                 dc1394_format7_get_color_coding(camera, videoMode, &colorCode);
                 ofLogVerbose()<< "Using color coding: "<<colorCode;
             } else {
@@ -261,8 +266,8 @@ namespace ofxLibdc {
                 dc1394video_mode_t bestMode;
                 bool found = false;
                 for(int i = 0; i < video_modes.num; i++) {
+                    dc1394video_mode_t curMode = video_modes.modes[i];
                     if (!dc1394_is_video_mode_scalable(video_modes.modes[i])) {
-                        dc1394video_mode_t curMode = video_modes.modes[i];
                         unsigned int curWidth, curHeight;
                         dc1394_get_image_size_from_video_mode(camera, curMode, &curWidth, &curHeight);
                         dc1394color_coding_t curCoding;
@@ -277,7 +282,7 @@ namespace ofxLibdc {
                             found = true;
                         }
                     } else {
-                        
+                        ofLogVerbose()<<"Non-scalable mode "<<curMode<<endl;
                     }
                 }
                 
@@ -326,6 +331,36 @@ namespace ofxLibdc {
 		
 		return true;
 	}
+    
+    /*
+    void Camera::resetBus(){
+        dc1394camera_list_t * list;
+        dc1394camera_t *camera;
+        dc1394error_t err;
+        
+        err=dc1394_camera_enumerate (libdcContext, &list);
+//        DC1394_ERR_RTN(err,"Failed to enumerate cameras");
+        
+        if (list->num == 0) {
+            ofLogError("No cameras found");
+            return;
+        }
+        
+        camera = dc1394_camera_new (libdcContext, list->ids[0].guid);
+        if (!camera) {
+            ofLogError()<<"Failed to initialize camera with guid" << list->ids[0].guid;
+            return;
+        }
+        dc1394_camera_free_list (list);
+        
+        if (dc1394_reset_bus (camera) != DC1394_SUCCESS){
+            //?
+        }
+        
+        dc1394_camera_free (camera);
+        ofLogVerbose()<<"Successfully reset USB bus";
+    }
+     */
 	
 	void Camera::quantizePosition() {
 		if(camera) {
