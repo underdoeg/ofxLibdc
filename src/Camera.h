@@ -23,7 +23,8 @@ public:
 	void setFormat7(bool useFormat7, int mode = 0);
 	void set1394b(bool use1394b);
 	void setBlocking(bool blocking);
-	void setBayerMode(dc1394color_filter_t bayerMode, dc1394bayer_method_t method = DC1394_BAYER_METHOD_SIMPLE);
+    void setBayerMode(dc1394color_filter_t bayerMode, dc1394bayer_method_t method = DC1394_BAYER_METHOD_SIMPLE);
+    void disableBayer();
 	void setFrameRate(float frameRate);
 	
 	ofImageType getImageType() const;

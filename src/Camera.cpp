@@ -138,6 +138,11 @@ namespace ofxLibdc {
 		useBayer = true;
 	}
 	
+    
+    void Camera::disableBayer(){
+        useBayer = false;
+    }
+    
 	void Camera::setFrameRate(float frameRate) {
 		bool changed = frameRate != this->frameRate; 
 		this->frameRate = frameRate;
@@ -199,7 +204,7 @@ namespace ofxLibdc {
 			dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_800);
 		} else {
 			dc1394_video_set_operation_mode(camera, DC1394_OPERATION_MODE_LEGACY);
-			dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_400);
+			dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_MAX);
 		}
         
         if(isStereoCamera()) {
@@ -231,7 +236,7 @@ namespace ofxLibdc {
                 ofLogVerbose() << "Maximum size for current Format7 mode is " << maxWidth << "x" << maxHeight;
                 quantizePosition();
                 quantizeSize();
-                int packetSize = DC1394_USE_MAX_AVAIL;
+                uint32_t packetSize = DC1394_USE_MAX_AVAIL;
                 if(frameRate > 0) {
                     // http://damien.douxchamps.net/ieee1394/libdc1394/v2.x/faq/#How_can_I_work_out_the_packet_size_for_a_wanted_frame_rate
                     float busPeriod = use1394b ? 6.25e-5 : 125e-5; // e-5 is microseconds
@@ -242,10 +247,16 @@ namespace ofxLibdc {
                     ofLogWarning() << "The camera may not run at exactly " << frameRate << " fps";
                 }
                 dc1394_format7_set_packet_size(camera, videoMode, packetSize);
-                dc1394_format7_set_roi(camera, videoMode, getLibdcType(imageType), packetSize, left, top, width, height);
                 unsigned int curWidth, curHeight;
                 dc1394_format7_get_image_size(camera, videoMode, &curWidth, &curHeight);
+                dc1394_format7_set_roi(camera, videoMode, getLibdcType(imageType), packetSize, left, top, curWidth, curHeight);
                 ofLogVerbose() <<  "Using mode: " <<  curWidth << "x" << curHeight;
+                
+                dc1394_format7_set_image_size(camera, videoMode, width, height);
+                
+                dc1394_format7_get_packet_size(camera, videoMode, &packetSize);
+                
+                ofLogVerbose() << "Packet size: "<<packetSize<<endl;
                 
                 dc1394color_coding_t colorCode;
                 
