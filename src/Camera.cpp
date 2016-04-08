@@ -140,7 +140,10 @@ namespace ofxLibdc {
 	
     
     void Camera::disableBayer(){
+        bool changed = useBayer == true;
         useBayer = false;
+        if(camera && changed)
+            applySettings();
     }
     
 	void Camera::setFrameRate(float frameRate) {
@@ -262,6 +265,8 @@ namespace ofxLibdc {
                 
                 if ( useBayer ){
                     dc1394_format7_set_color_coding(camera, videoMode, DC1394_COLOR_CODING_RAW8);
+                } else {
+                    dc1394_format7_set_color_coding(camera, videoMode, getLibdcType(imageType));
                 }
                 
                 dc1394_format7_get_color_coding(camera, videoMode, &colorCode);
