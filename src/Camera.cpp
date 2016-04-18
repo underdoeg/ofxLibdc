@@ -20,7 +20,6 @@ namespace ofxLibdc {
 	capturePolicy(DC1394_CAPTURE_POLICY_POLL),
 	ready(false),
 	frameRate(0) {
-		startLibdcContext();
         setStereoCamera(isStereoCamera);
 	}
 	
@@ -148,7 +147,9 @@ namespace ofxLibdc {
 			applySettings();
 	}
 	
-	bool Camera::setup(int cameraNumber) {
+    bool Camera::setup(int cameraNumber) {
+        startLibdcContext();
+        
 		dc1394camera_list_t* list;
 		dc1394_camera_enumerate(libdcContext, &list);
 		if(list->num == 0) {
@@ -160,7 +161,9 @@ namespace ofxLibdc {
 		return initCamera(cameraGuidInt) && applySettings();
 	}
 	
-	bool Camera::setup(string cameraGuid) {
+    bool Camera::setup(string cameraGuid) {
+        startLibdcContext();
+        
         cameraGuidInt = 0;
 		istringstream ss(cameraGuid);
 		ss >> hex >> cameraGuidInt;
@@ -357,7 +360,9 @@ namespace ofxLibdc {
     void Camera::resetBus( int which ){
         if ( camera ){
             ofLogError()<<"Only use this method before you've setup a camera";
+            return;
         }
+        startLibdcContext();
         
         bool bSetupTempCamera = false;
         
@@ -390,6 +395,7 @@ namespace ofxLibdc {
         if ( bSetupTempCamera ){
             close();
         }
+        
         ofLogVerbose()<<"Successfully reset USB bus";
     }
     
@@ -397,7 +403,9 @@ namespace ofxLibdc {
     void Camera::resetBus( string cameraGuid ){
         if ( camera ){
             ofLogError()<<"Only use this method before you've setup a camera";
+            return;
         }
+        startLibdcContext();
         
         uint64_t guid = 0;
         istringstream ss(cameraGuid);
