@@ -25,12 +25,7 @@ namespace ofxLibdc {
 	}
 	
 	Camera::~Camera() {
-		if(camera != NULL) {
-			dc1394_capture_stop(camera);
-			setTransmit(false);
-			dc1394_camera_free(camera);
-		}
-		stopLibdcContext();
+        close();
 	}
 	
 	bool Camera::getBlocking() const {
@@ -171,6 +166,17 @@ namespace ofxLibdc {
 		ss >> hex >> cameraGuidInt;
 		return initCamera(cameraGuidInt) && applySettings();
 	}
+    
+    
+    void Camera::close() {
+        if(camera != NULL) {
+            dc1394_capture_stop(camera);
+            setTransmit(false);
+            dc1394_camera_free(camera);
+        }
+        
+        stopLibdcContext();
+    }
 	
 	bool Camera::initCamera(uint64_t cameraGuid) {
         cameraGuidInt = cameraGuid;
@@ -227,7 +233,7 @@ namespace ofxLibdc {
             dc1394_format7_set_image_size(camera, videoMode, width, height); // set image size
             unsigned int curWidth, curHeight;
             dc1394_format7_get_image_size(camera, videoMode, &curWidth, &curHeight);
-            ofLogVerbose() <<  "Using mode: " <<  width << "x" << height;
+            ofLogVerbose() <<  "Using mode: " <<  curWidth << "x" << curHeight;
             
             dc1394_format7_set_color_coding(camera, videoMode, colorCoding);
             
@@ -348,35 +354,69 @@ namespace ofxLibdc {
 		return true;
 	}
     
-    /*
-    void Camera::resetBus(){
+    void Camera::resetBus( int which ){
+        if ( camera ){
+            ofLogError()<<"Only use this method before you've setup a camera";
+        }
+        
+        bool bSetupTempCamera = false;
+        
         dc1394camera_list_t * list;
-        dc1394camera_t *camera;
         dc1394error_t err;
         
-        err=dc1394_camera_enumerate (libdcContext, &list);
-//        DC1394_ERR_RTN(err,"Failed to enumerate cameras");
+        err = dc1394_camera_enumerate (libdcContext, &list);
         
         if (list->num == 0) {
             ofLogError("No cameras found");
             return;
         }
         
-        camera = dc1394_camera_new (libdcContext, list->ids[0].guid);
+        if (list->num <= which) {
+            ofLogError()<<"Trying to access camera "<<which<<" for list of length "<<list->num;
+            return;
+        }
+        
+        camera = dc1394_camera_new (libdcContext, list->ids[which].guid);
         if (!camera) {
-            ofLogError()<<"Failed to initialize camera with guid" << list->ids[0].guid;
+            ofLogError()<<"Failed to initialize camera with guid" << list->ids[which].guid;
             return;
         }
         dc1394_camera_free_list (list);
         
-        if (dc1394_reset_bus (camera) != DC1394_SUCCESS){
-            //?
+        if ( dc1394_reset_bus (camera) != DC1394_SUCCESS ){
+            ofLogWarning()<<"Error resetting USB bus";
         }
         
-        dc1394_camera_free (camera);
+        if ( bSetupTempCamera ){
+            close();
+        }
         ofLogVerbose()<<"Successfully reset USB bus";
     }
-     */
+    
+    
+    void Camera::resetBus( string cameraGuid ){
+        if ( camera ){
+            ofLogError()<<"Only use this method before you've setup a camera";
+        }
+        
+        int guid = 0;
+        istringstream ss(cameraGuid);
+        ss >> hex >> guid;
+        
+        camera = dc1394_camera_new (libdcContext, guid);
+        if (!camera) {
+            ofLogError()<<"Failed to initialize camera with guid" << guid;
+            return;
+        }
+        
+        if ( dc1394_reset_bus (camera) != DC1394_SUCCESS ){
+            ofLogWarning()<<"Error resetting USB bus";
+        }
+        
+        close();
+        
+        ofLogVerbose()<<"Successfully reset USB bus";
+    }
 	
 	void Camera::quantizePosition() {
 		if(camera) {

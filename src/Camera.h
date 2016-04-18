@@ -42,8 +42,11 @@ public:
 	virtual bool setup(string cameraGuid);
 	virtual ~Camera();
 	
+    virtual void close();
+    
     // reset bus
-//    void resetBus();
+    void resetBus( int which = 0 );
+    void resetBus( string cameraGuid );
     
 	// post-setup settings	
     string getGuid();
