@@ -399,13 +399,13 @@ namespace ofxLibdc {
             ofLogError()<<"Only use this method before you've setup a camera";
         }
         
-        int guid = 0;
+        uint64_t guid = 0;
         istringstream ss(cameraGuid);
         ss >> hex >> guid;
         
         camera = dc1394_camera_new (libdcContext, guid);
         if (!camera) {
-            ofLogError()<<"Failed to initialize camera with guid" << guid;
+            ofLogError()<<"Failed to initialize camera with guid " << guid;
             return;
         }
         
