@@ -177,6 +177,7 @@ namespace ofxLibdc {
             setTransmit(false);
             dc1394_camera_free(camera);
         }
+        camera = NULL;
         
         stopLibdcContext();
     }
