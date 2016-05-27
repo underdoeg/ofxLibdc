@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "dc1394.h"
+#include <dc1394/dc1394.h>
 #include <stdlib.h>
 #include <string.h>
 
