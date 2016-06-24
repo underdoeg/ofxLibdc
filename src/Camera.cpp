@@ -20,17 +20,11 @@ namespace ofxLibdc {
 	capturePolicy(DC1394_CAPTURE_POLICY_POLL),
 	ready(false),
 	frameRate(0) {
-		startLibdcContext();
         setStereoCamera(isStereoCamera);
 	}
 	
 	Camera::~Camera() {
-		if(camera != NULL) {
-			dc1394_capture_stop(camera);
-			setTransmit(false);
-			dc1394_camera_free(camera);
-		}
-		stopLibdcContext();
+        close();
 	}
 	
 	bool Camera::getBlocking() const {
@@ -125,12 +119,27 @@ namespace ofxLibdc {
 		capturePolicy = blocking ? DC1394_CAPTURE_POLICY_WAIT : DC1394_CAPTURE_POLICY_POLL;
 	}
 	
-	void Camera::setBayerMode(dc1394color_filter_t bayerMode){
+	void Camera::setBayerMode(dc1394color_filter_t bayerMode, dc1394bayer_method_t method){
 		setImageType(OF_IMAGE_COLOR);
-		this->bayerMode = bayerMode;
+		this->bayerMode     = bayerMode;
+        
+        if ( isStereo ){
+            ofLogError()<<"[ofxLibdc] Don't override the default stereo bayer method!";
+        } else {
+            this->bayerMethod   = method;
+        }
+        
 		useBayer = true;
 	}
 	
+    
+    void Camera::disableBayer(){
+        bool changed = useBayer == true;
+        useBayer = false;
+        if(camera && changed)
+            applySettings();
+    }
+    
 	void Camera::setFrameRate(float frameRate) {
 		bool changed = frameRate != this->frameRate; 
 		this->frameRate = frameRate;
@@ -138,26 +147,43 @@ namespace ofxLibdc {
 			applySettings();
 	}
 	
-	bool Camera::setup(int cameraNumber) {
+    bool Camera::setup(int cameraNumber) {
+        startLibdcContext();
+        
 		dc1394camera_list_t* list;
 		dc1394_camera_enumerate(libdcContext, &list);
 		if(list->num == 0) {
 			ofLog(OF_LOG_ERROR, "No cameras found.");
 			return false;
 		}
-		uint64_t cameraGuid = list->ids[cameraNumber].guid;
+		cameraGuidInt = list->ids[cameraNumber].guid;
 		dc1394_camera_free_list(list);
-		return initCamera(cameraGuid) && applySettings();
+		return initCamera(cameraGuidInt) && applySettings();
 	}
 	
-	bool Camera::setup(string cameraGuid) {
-		uint64_t cameraGuidInt;
+    bool Camera::setup(string cameraGuid) {
+        startLibdcContext();
+        
+        cameraGuidInt = 0;
 		istringstream ss(cameraGuid);
 		ss >> hex >> cameraGuidInt;
 		return initCamera(cameraGuidInt) && applySettings();
 	}
+    
+    
+    void Camera::close() {
+        if(camera != NULL) {
+            dc1394_capture_stop(camera);
+            setTransmit(false);
+            dc1394_camera_free(camera);
+        }
+        camera = NULL;
+        
+        stopLibdcContext();
+    }
 	
 	bool Camera::initCamera(uint64_t cameraGuid) {
+        cameraGuidInt = cameraGuid;
 		// create camera struct
 		camera = dc1394_camera_new(libdcContext, cameraGuid);
 		if (!camera) {
@@ -191,7 +217,7 @@ namespace ofxLibdc {
 			dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_800);
 		} else {
 			dc1394_video_set_operation_mode(camera, DC1394_OPERATION_MODE_LEGACY);
-			dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_400);
+			dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_MAX);
 		}
         
         if(isStereoCamera()) {
@@ -211,7 +237,7 @@ namespace ofxLibdc {
             dc1394_format7_set_image_size(camera, videoMode, width, height); // set image size
             unsigned int curWidth, curHeight;
             dc1394_format7_get_image_size(camera, videoMode, &curWidth, &curHeight);
-            ofLogVerbose() <<  "Using mode: " <<  width << "x" << height;
+            ofLogVerbose() <<  "Using mode: " <<  curWidth << "x" << curHeight;
             
             dc1394_format7_set_color_coding(camera, videoMode, colorCoding);
             
@@ -223,7 +249,7 @@ namespace ofxLibdc {
                 ofLogVerbose() << "Maximum size for current Format7 mode is " << maxWidth << "x" << maxHeight;
                 quantizePosition();
                 quantizeSize();
-                int packetSize = DC1394_USE_MAX_AVAIL;
+                uint32_t packetSize = DC1394_USE_MAX_AVAIL;
                 if(frameRate > 0) {
                     // http://damien.douxchamps.net/ieee1394/libdc1394/v2.x/faq/#How_can_I_work_out_the_packet_size_for_a_wanted_frame_rate
                     float busPeriod = use1394b ? 6.25e-5 : 125e-5; // e-5 is microseconds
@@ -233,10 +259,28 @@ namespace ofxLibdc {
                     packetSize = (width * height * depth + denominator - 1) / denominator;
                     ofLogWarning() << "The camera may not run at exactly " << frameRate << " fps";
                 }
-                dc1394_format7_set_roi(camera, videoMode, getLibdcType(imageType), packetSize, left, top, width, height);
+                dc1394_format7_set_packet_size(camera, videoMode, packetSize);
                 unsigned int curWidth, curHeight;
                 dc1394_format7_get_image_size(camera, videoMode, &curWidth, &curHeight);
-                ofLogVerbose() <<  "Using mode: " <<  width << "x" << height;
+                dc1394_format7_set_roi(camera, videoMode, getLibdcType(imageType), packetSize, left, top, curWidth, curHeight);
+                ofLogVerbose() <<  "Using mode: " <<  curWidth << "x" << curHeight;
+                
+                dc1394_format7_set_image_size(camera, videoMode, width, height);
+                
+                dc1394_format7_get_packet_size(camera, videoMode, &packetSize);
+                
+                ofLogVerbose() << "Packet size: "<<packetSize<<endl;
+                
+                dc1394color_coding_t colorCode;
+                
+                if ( useBayer ){
+                    dc1394_format7_set_color_coding(camera, videoMode, DC1394_COLOR_CODING_RAW8);
+                } else {
+                    dc1394_format7_set_color_coding(camera, videoMode, getLibdcType(imageType));
+                }
+                
+                dc1394_format7_get_color_coding(camera, videoMode, &colorCode);
+                ofLogVerbose()<< "Using color coding: "<<colorCode;
             } else {
                 dc1394video_modes_t video_modes;
                 dc1394_video_get_supported_modes(camera, &video_modes);
@@ -248,8 +292,8 @@ namespace ofxLibdc {
                 dc1394video_mode_t bestMode;
                 bool found = false;
                 for(int i = 0; i < video_modes.num; i++) {
+                    dc1394video_mode_t curMode = video_modes.modes[i];
                     //if (!dc1394_is_video_mode_scalable(video_modes.modes[i])) {
-                        dc1394video_mode_t curMode = video_modes.modes[i];
                         unsigned int curWidth, curHeight;
                         dc1394_get_image_size_from_video_mode(camera, curMode, &curWidth, &curHeight);
                         dc1394color_coding_t curCoding;
@@ -263,7 +307,11 @@ namespace ofxLibdc {
                             }
                             found = true;
                         }
-                    //}
+                    /*
+                    } else {
+                        ofLogVerbose()<<"Non-scalable mode "<<curMode<<endl;
+                    }
+                    */
                 }
                 
                 if(!found) {
@@ -279,29 +327,28 @@ namespace ofxLibdc {
                 }
                 
                 dc1394framerates_t frameRates;
-                dc1394framerate_t selectedFrameRate;
                 dc1394_video_get_supported_framerates(camera, videoMode, &frameRates);
                 for(int i = 0; i < frameRates.num; i++) {
                     ofLogVerbose() << "Available framerate: " << makeString(frameRates.framerates[i]);
                 }
-                if(frameRate == 0) {
-                    selectedFrameRate = frameRates.framerates[frameRates.num - 1];
+                if(frameRate == 0 && frameRates.num > 0) {
+                    framerateActual = frameRates.framerates[frameRates.num - 1];
                 } else {
                     float bestDistance;
                     for(int i = 0; i < frameRates.num; i++) {
                         float curDistance = abs(frameRate - makeFloat(frameRates.framerates[i]));
                         if(i == 0 || curDistance < bestDistance) {
                             bestDistance = curDistance;
-                            selectedFrameRate = frameRates.framerates[i];
+                            framerateActual = frameRates.framerates[i];
                         }
                     }
                     if(bestDistance != 0) {
-                        ofLogWarning() << "Using framerate " << makeFloat(selectedFrameRate) << " instead of " << frameRate;
-                        frameRate = makeFloat(selectedFrameRate);
+                        ofLogWarning() << "Using framerate " << makeFloat(framerateActual) << " instead of " << frameRate;
+                        frameRate = makeFloat(framerateActual);
                     }
                 }
-                dc1394_video_set_framerate(camera, selectedFrameRate);
-                ofLogVerbose() <<  "Using mode: " <<  width << "x" << height << makeString(selectedFrameRate) << "fps";
+                dc1394_video_set_framerate(camera, framerateActual);
+                ofLogVerbose() <<  "Using mode: " <<  width << "x" << height << makeString(framerateActual) << "fps";
             }
         }
 				
@@ -312,6 +359,75 @@ namespace ofxLibdc {
 		
 		return true;
 	}
+    
+    void Camera::resetBus( int which ){
+        if ( camera ){
+            ofLogError()<<"Only use this method before you've setup a camera";
+            return;
+        }
+        startLibdcContext();
+        
+        bool bSetupTempCamera = false;
+        
+        dc1394camera_list_t * list;
+        dc1394error_t err;
+        
+        err = dc1394_camera_enumerate (libdcContext, &list);
+        
+        if (list->num == 0) {
+            ofLogError("No cameras found");
+            return;
+        }
+        
+        if (list->num <= which) {
+            ofLogError()<<"Trying to access camera "<<which<<" for list of length "<<list->num;
+            return;
+        }
+        
+        camera = dc1394_camera_new (libdcContext, list->ids[which].guid);
+        if (!camera) {
+            ofLogError()<<"Failed to initialize camera with guid" << list->ids[which].guid;
+            return;
+        }
+        dc1394_camera_free_list (list);
+        
+        if ( dc1394_reset_bus (camera) != DC1394_SUCCESS ){
+            ofLogWarning()<<"Error resetting USB bus";
+        }
+        
+        if ( bSetupTempCamera ){
+            close();
+        }
+        
+        ofLogVerbose()<<"Successfully reset USB bus";
+    }
+    
+    
+    void Camera::resetBus( string cameraGuid ){
+        if ( camera ){
+            ofLogError()<<"Only use this method before you've setup a camera";
+            return;
+        }
+        startLibdcContext();
+        
+        uint64_t guid = 0;
+        istringstream ss(cameraGuid);
+        ss >> hex >> guid;
+        
+        camera = dc1394_camera_new (libdcContext, guid);
+        if (!camera) {
+            ofLogError()<<"Failed to initialize camera with guid " << guid;
+            return;
+        }
+        
+        if ( dc1394_reset_bus (camera) != DC1394_SUCCESS ){
+            ofLogWarning()<<"Error resetting USB bus";
+        }
+        
+        close();
+        
+        ofLogVerbose()<<"Successfully reset USB bus";
+    }
 	
 	void Camera::quantizePosition() {
 		if(camera) {
@@ -338,6 +454,13 @@ namespace ofxLibdc {
 			dc1394_feature_print_all(&features, stdout);
 		}
 	}
+    
+    
+    string Camera::getGuid() {
+        stringstream ss;
+        ss << hex << cameraGuidInt;
+        return ss.str();
+    }
 	
 	// normalized values
 	void Camera::setBrightness(float brightness) {setFeature(DC1394_FEATURE_BRIGHTNESS, brightness);}
@@ -469,6 +592,11 @@ namespace ofxLibdc {
 	float Camera::getFrameRate() const {
 		return frameRate;
 	}
+    
+    
+    dc1394framerate_t Camera::getFrameRateActual() const {
+        return framerateActual;
+    }
 	
 	ofImageType Camera::getImageType() const {
 		return imageType;
@@ -559,7 +687,7 @@ namespace ofxLibdc {
 	bool Camera::grabFrame(ofImage& img) {
 		if(camera) {
 			dc1394video_frame_t *frame;
-			dc1394_capture_dequeue(camera, capturePolicy, &frame);
+			dc1394error_t err = dc1394_capture_dequeue(camera, capturePolicy, &frame);
 			if(frame != NULL) {
 				// don't trust allocate() to be smart. should also check for imageType change.
 				if(img.getWidth() != width || img.getHeight() != height) {
@@ -571,7 +699,7 @@ namespace ofxLibdc {
 					memcpy(dst, src, width * height);
 				} else if(imageType == OF_IMAGE_COLOR) {
 					if(useBayer) {
-						dc1394_bayer_decoding_8bit(src, dst, width, height, bayerMode, DC1394_BAYER_METHOD_BILINEAR);
+						dc1394_bayer_decoding_8bit(src, dst, width, height, bayerMode, bayerMethod);
 					} else {
 						unsigned int bits = width * height * img.getPixels().getBitsPerPixel();
 						dc1394_convert_to_RGB8(src, dst, width, height, 0, getLibdcType(imageType), bits);
@@ -580,10 +708,11 @@ namespace ofxLibdc {
 				dc1394_capture_enqueue(camera, frame);
 				ready = true;
 				return true;
-			} else {
+            } else {
+                //ofLogVerbose("ofxLibdc")<<"Frame is null. Libdc error code:"<<err;
 				return false;
 			}
-		} else {
+        } else {
 			return false;
 		}
 	}

@@ -24,6 +24,12 @@ namespace ofxLibdc {
 #define PTGREY_FRAME_RATE_INQ 0x53c
 #define PTGREY_FRAME_RATE 0x83c
 #define PTGREY_FRAME_INFO 0x12f8
+    
+#define PTGREY_SHUTTER_INQ  0x51c
+#define PTGREY_SHUTTER      0x81c
+    
+#define PTGREY_TRIGGER_INQ  0x530
+#define PTGREY_TRIGGER_MODE 0x830
 
 #define PTGREY_PIO_DIRECTION 0x11f8
 #define PTGREY_STROBE_0_CNT 0x1500

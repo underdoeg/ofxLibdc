@@ -23,7 +23,8 @@ public:
 	void setFormat7(bool useFormat7, int mode = 0);
 	void set1394b(bool use1394b);
 	void setBlocking(bool blocking);
-	void setBayerMode(dc1394color_filter_t bayerMode);
+    void setBayerMode(dc1394color_filter_t bayerMode, dc1394bayer_method_t method = DC1394_BAYER_METHOD_SIMPLE);
+    void disableBayer();
 	void setFrameRate(float frameRate);
 	
 	ofImageType getImageType() const;
@@ -31,6 +32,7 @@ public:
 	unsigned int getWidth() const;
 	unsigned int getHeight() const;
 	float getFrameRate() const;
+    dc1394framerate_t getFrameRateActual() const;
     
     // stereo camera settings
     void setStereoCamera(bool isStereo);
@@ -40,8 +42,15 @@ public:
 	virtual bool setup(string cameraGuid);
 	virtual ~Camera();
 	
+    virtual void close();
+    
+    // reset bus
+    void resetBus( int which = 0 );
+    void resetBus( string cameraGuid );
+    
 	// post-setup settings	
-	
+    string getGuid();
+    
 	// normalized values
 	void setBrightness(float brightness);
 	void setGamma(float gamma);
@@ -126,10 +135,11 @@ protected:
 	static void startLibdcContext();
 	static void stopLibdcContext();
     
+    uint64_t cameraGuidInt;
+    
     bool isStereo;
     dc1394stereo_method_t stereoMethod;
     dc1394color_coding_t colorCoding;
-    dc1394bayer_method_t bayerMethod;
 	
 	static ofImageType getOfImageType(dc1394color_coding_t imageType);
 	static dc1394color_coding_t getLibdcType(ofImageType imageType);
@@ -137,12 +147,14 @@ protected:
 	dc1394camera_t* camera;
 	dc1394video_mode_t videoMode;
 	dc1394capture_policy_t capturePolicy;
+    dc1394framerate_t framerateActual;
 	unsigned int width, height, left, top;
 	ofImageType imageType;
 	float frameRate;
 	
 	bool useBayer;
-	dc1394color_filter_t bayerMode;
+    dc1394color_filter_t bayerMode;
+    dc1394bayer_method_t bayerMethod;
 	
 	bool useFormat7;
 	int format7Mode;
