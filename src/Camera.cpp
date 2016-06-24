@@ -242,13 +242,13 @@ namespace ofxLibdc {
                 dc1394_video_get_supported_modes(camera, &video_modes);
                 dc1394color_coding_t targetCoding = getLibdcType(imageType);
                 if(useBayer){
-                    targetCoding = DC1394_COLOR_CODING_MONO8;
+                    targetCoding = DC1394_COLOR_CODING_RAW8;
                 }
                 float bestDistance = 0;
                 dc1394video_mode_t bestMode;
                 bool found = false;
                 for(int i = 0; i < video_modes.num; i++) {
-                    if (!dc1394_is_video_mode_scalable(video_modes.modes[i])) {
+                    //if (!dc1394_is_video_mode_scalable(video_modes.modes[i])) {
                         dc1394video_mode_t curMode = video_modes.modes[i];
                         unsigned int curWidth, curHeight;
                         dc1394_get_image_size_from_video_mode(camera, curMode, &curWidth, &curHeight);
@@ -263,7 +263,7 @@ namespace ofxLibdc {
                             }
                             found = true;
                         }
-                    }
+                    //}
                 }
                 
                 if(!found) {
