@@ -206,7 +206,7 @@ namespace ofxLibdc {
 		
 		return true;
 	}
-	
+
 	bool Camera::applySettings() {
 		if(camera)
 			dc1394_capture_stop(camera);
@@ -251,6 +251,19 @@ namespace ofxLibdc {
                 quantizeSize();
                 uint32_t packetSize = DC1394_USE_MAX_AVAIL;
                 if(frameRate > 0) {
+
+                    dc1394_feature_set_mode(camera, DC1394_FEATURE_FRAME_RATE, DC1394_FEATURE_MODE_MANUAL);
+                    dc1394_feature_set_power(camera, DC1394_FEATURE_FRAME_RATE, DC1394_OFF);
+                    /*
+                    float min, max;
+                    getFeatureAbsRange(DC1394_FEATURE_FRAME_RATE, &min, &max);
+                    ofLog() << "min: " << min << " max: " << max;
+                    //dc1394_feature_get_boundaries(camera, DC1394_FEATURE_FRAME_RATE)
+                    */
+
+                    //dc1394_set_register(camera, 0x600, 0x00);
+
+
                     // http://damien.douxchamps.net/ieee1394/libdc1394/v2.x/faq/#How_can_I_work_out_the_packet_size_for_a_wanted_frame_rate
                     float busPeriod = use1394b ? 6.25e-5 : 125e-5; // e-5 is microseconds
                     int numPackets = (int) (1.0 / (busPeriod * frameRate) + 0.5);
@@ -357,6 +370,10 @@ namespace ofxLibdc {
 		
 		dc1394_capture_setup(camera, OFXLIBDC_BUFFER_SIZE, DC1394_CAPTURE_FLAGS_DEFAULT);
 		
+		dc1394featureset_t features;
+		dc1394_feature_get_all(camera,&features);
+		dc1394_feature_print_all(&features, stdout);
+
 		return true;
 	}
     
