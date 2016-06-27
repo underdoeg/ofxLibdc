@@ -249,12 +249,15 @@ namespace ofxLibdc {
                 ofLogVerbose() << "Maximum size for current Format7 mode is " << maxWidth << "x" << maxHeight;
                 quantizePosition();
                 quantizeSize();
+
+                dc1394_feature_set_mode(camera, DC1394_FEATURE_FRAME_RATE, DC1394_FEATURE_MODE_MANUAL);
+                dc1394_feature_set_power(camera, DC1394_FEATURE_FRAME_RATE, DC1394_OFF);
+
+
                 uint32_t packetSize = DC1394_USE_MAX_AVAIL;
                 if(frameRate > 0) {
 
-                    dc1394_feature_set_mode(camera, DC1394_FEATURE_FRAME_RATE, DC1394_FEATURE_MODE_MANUAL);
-                    dc1394_feature_set_power(camera, DC1394_FEATURE_FRAME_RATE, DC1394_OFF);
-                    /*
+                          /*
                     float min, max;
                     getFeatureAbsRange(DC1394_FEATURE_FRAME_RATE, &min, &max);
                     ofLog() << "min: " << min << " max: " << max;
