@@ -271,6 +271,9 @@ namespace ofxLibdc {
                     int depth = getSourceDepth();
                     packetSize = (width * height * depth + denominator - 1) / denominator;
                     ofLogWarning() << "The camera may not run at exactly " << frameRate << " fps";
+                }else{
+                    dc1394_feature_set_mode(camera, DC1394_FEATURE_FRAME_RATE, DC1394_FEATURE_MODE_AUTO);
+                    dc1394_feature_set_power(camera, DC1394_FEATURE_FRAME_RATE, DC1394_ON);
                 }
                 dc1394_format7_set_packet_size(camera, videoMode, packetSize);
                 unsigned int curWidth, curHeight;
