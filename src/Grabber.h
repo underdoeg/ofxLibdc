@@ -26,7 +26,7 @@ public:
 	void setUseTexture(bool useTexture);
 //	unsigned char* getPixels();
 	ofImage& getBuffer();
-	void update();
+	void update() override;
 	void grabFrame();
 	void draw(float x, float y);
 	void draw(float x, float y, float w, float h);
@@ -38,7 +38,7 @@ public:
     const ofPixels& getPixels() const override;
     
     bool isInitialized() const override {return true;}
-    bool setPixelFormat(ofPixelFormat pixelFormat) override {}
+    bool setPixelFormat(ofPixelFormat pixelFormat) override {return true;}
     ofPixelFormat getPixelFormat() const override {return OF_PIXELS_UNKNOWN;}
     
 protected:

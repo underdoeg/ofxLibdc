@@ -375,9 +375,9 @@ namespace ofxLibdc {
 		
 		dc1394_capture_setup(camera, OFXLIBDC_BUFFER_SIZE, DC1394_CAPTURE_FLAGS_DEFAULT);
 		
-		dc1394featureset_t features;
-		dc1394_feature_get_all(camera,&features);
-		dc1394_feature_print_all(&features, stdout);
+		//dc1394featureset_t features;
+		//dc1394_feature_get_all(camera,&features);
+		//dc1394_feature_print_all(&features, stdout);
 
 		return true;
 	}
